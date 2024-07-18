@@ -1,0 +1,107 @@
+Paytm workflows 
+
+ 1. Login - (Simple)
+ 2. Customer Ticket - ( Simple )
+ 3. Money Transfer  - ( Medium Complex )
+ 4. KYC Approval  - ( Medium complex )
+
+Data Gathering Requirements:
+1. Login:
+
+    User Input: Username, Password
+    System Process: Authenticate user, Generate token
+    Output: Authentication token.
+
+2. Customer Support Ticket:
+
+    User Input: User ID, Issue description
+    System Process: Create ticket, Assign to customer service
+    Output: Ticket ID.
+
+3. Money Transfer:
+
+    User Input: Sender ID, Receiver ID, Amount, Transfer details
+    System Process: Validate accounts, Deduct amount from sender, Credit amount to receiver
+    Output: Transaction ID.
+
+4. KYC Approval:
+    
+    User Input: User ID, Personal details, Documents
+    System Process: Validate documents, Update KYC status. Might be also invole validating the documents and missing documents.
+    Output: KYC status. 
+
+Edges and Nodes:
+
+1. Login
+    Nodes: User, Authentication
+    Edges: Authenticates
+
+2. Customer Support Ticket:
+    Nodes: User, Ticket, Customer Service
+    Edges: Creates, AssignedTo
+
+3. Money Transfer:
+    Nodes: User, Transaction, Bank Account
+    Edges: Transfers, DeductsFrom, CreditsTo
+
+4. KYC Approval:
+    Nodes: User, KYC Document, KYC Status
+    Edges: Submits, Validates, Updates
+
+Schema Definition Language (SDL):
+
+    type User {
+      id: ID!
+      username: String!
+      password: String!
+      profile: UserProfile
+    }
+    
+    type UserProfile {
+      userId: ID!
+      tickets: [Ticket]
+      transactions: [Transaction]
+      kycStatus: KYCStatus
+    }
+    
+    type Ticket {
+      id: ID!
+      userId: ID!
+      description: String!
+      status: String!
+    }
+    
+    type BankAccount {
+      id: ID!
+      userId: ID!
+      balance: Float!
+    }
+    
+    type Transaction {
+      id: ID!
+      senderId: ID!
+      receiverId: ID!
+      amount: Float!
+      date: String!
+    }
+    
+    type KYCStatus {
+      userId: ID!
+      status: String!
+      details: String
+    }
+    
+    type Query {
+      login(username: String!, password: String!): User
+      getUserProfile(userId: ID!): UserProfile
+      getTransaction(transactionId: ID!): Transaction
+      getKYCStatus(userId: ID!): KYCStatus
+    }
+    
+    type Mutation {
+      createTicket(userId: ID!, description: String!): Ticket
+      transferMoney(senderId: ID!, receiverId: ID!, amount: Float!): Transaction
+      submitKYC(userId: ID!, personalDetails: String!, documents: [String!]!): KYCStatus
+      handleKYCRejection(userId: ID!, reason: String!): KYCStatus
+    }
+
