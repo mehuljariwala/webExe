@@ -62,6 +62,7 @@ Schema Definition Language (SDL):
       tickets: [Ticket]
       transactions: [Transaction]
       kycStatus: KYCStatus
+      walletBalance: WalletBalance
     }
     
     type Ticket {
@@ -69,12 +70,6 @@ Schema Definition Language (SDL):
       userId: ID!
       description: String!
       status: String!
-    }
-    
-    type BankAccount {
-      id: ID!
-      userId: ID!
-      balance: Float!
     }
     
     type Transaction {
@@ -90,11 +85,17 @@ Schema Definition Language (SDL):
       status: String!
       details: String
     }
+
+    type WalletBalance {
+      userId: ID!
+      balance: Float!
+    }
     
     type Query {
       login(username: String!, password: String!): User
       getUserProfile(userId: ID!): UserProfile
       getTransaction(transactionId: ID!): Transaction
+      getWalletBalance(userId: ID!): WalletBalance
       getKYCStatus(userId: ID!): KYCStatus
     }
     
